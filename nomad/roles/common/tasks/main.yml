@@ -1,0 +1,54 @@
+---
+- name: Install dependencies
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - unzip
+    - curl
+    - wget
+    - gnupg
+
+- name: Deploy Hashicorp public key file
+  copy:
+    src: hashicorp.asc
+    dest: /tmp/hashicorp.asc
+
+- name: Import Hashicorp key
+  command: gpg --import /tmp/hashicorp.asc
+
+- name: Download SHA256 Checksums
+  get_url:
+    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_SHA256SUMS
+    dest: /tmp/nomad_0.1.0_SHA256SUMS
+
+- name: Download Signature for SHA256 Checksums
+  get_url:
+    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_SHA256SUMS.sig
+    dest: /tmp/nomad_0.1.0_SHA256SUMS.sig
+
+- name: Verify SHA256 Checksums
+  command: gpg --verify /tmp/nomad_0.1.0_SHA256SUMS.sig /tmp/nomad_0.1.0_SHA256SUMS
+
+- name: Download Nomad
+  get_url:
+    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_linux_amd64.zip
+    dest: /tmp/nomad_0.1.0_linux_amd64.zip
+
+# Temporarily disabled; see https://github.com/hashicorp/nomad/issues/168
+#
+# - name: Verify Nomad SHA256 Checksum
+#   shell: grep $(sha256sum /tmp/nomad_0.1.0_linux_amd64.zip | cut -d' ' -f1) /tmp/nomad_0.1.0_SHA256SUMS
+
+- name: Install Nomad
+  unarchive:
+    copy: false
+    src: /tmp/nomad_0.1.0_linux_amd64.zip
+    dest: /usr/local/bin
+
+- file:
+    path: /usr/local/bin/nomad
+    mode: 0755
+
+- name: Run Nomad
+  command: nomad --version

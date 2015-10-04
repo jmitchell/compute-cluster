@@ -1,0 +1,2 @@
+[nomad-servers]
+node[01:03]

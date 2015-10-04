@@ -1,0 +1,8 @@
+---
+- name: Install Nomad and Docker
+  hosts: nomad-servers
+  remote_user: nomad
+  sudo: yes
+
+  roles:
+    - common
