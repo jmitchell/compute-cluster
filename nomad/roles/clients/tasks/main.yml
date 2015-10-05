@@ -5,4 +5,4 @@
     dest: /tmp/client.hcl
 
 - name: Run nomad client
-  shell: daemon -U -o /tmp/nomad-client.log -- nomad agent -config /tmp/client.hcl && sleep 3
+  shell: daemon -U -o /tmp/nomad-client.log -- nomad agent -config /tmp/client.hcl && sleep 10

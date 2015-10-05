@@ -17,3 +17,9 @@
   sudo: yes
   roles:
     - clients
+
+- name: Dispatch a job to the cluster
+  hosts: node01
+  sudo: yes
+  roles:
+    - jobs

@@ -8,4 +8,9 @@
   shell: daemon -U -o /tmp/nomad-server.log -- nomad agent -config /tmp/server.hcl && sleep 3
 
 - name: Connect to the other servers
-  shell: nomad server-join 192.168.0.101 192.168.0.102 192.168.0.103
+  shell: nomad server-join {{ hostvars[item]['ansible_eth0']['ipv4']['address'] }}
+  with_items:
+    - node01
+    - node02
+    - node03
+
