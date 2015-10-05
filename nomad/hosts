@@ -1,2 +1,11 @@
 [nomad-servers]
-node[01:03]
+node01 local_id=1
+node02 local_id=2
+node03 local_id=3
+
+[nomad-clients]
+node04 local_id=4
+
+[nomad-nodes:children]
+nomad-servers
+nomad-clients

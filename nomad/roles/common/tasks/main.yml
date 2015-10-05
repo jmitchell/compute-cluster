@@ -8,6 +8,7 @@
     - curl
     - wget
     - gnupg
+    - daemon
 
 - name: Deploy Hashicorp public key file
   copy:
@@ -50,5 +51,13 @@
     path: /usr/local/bin/nomad
     mode: 0755
 
+- name: Install server.hcl
+  template:
+    src: server.hcl.j2
+    dest: /tmp/server.hcl
+
 - name: Run Nomad
-  command: nomad --version
+  shell: daemon -U -o /tmp/nomad.log -- nomad agent -config /tmp/server.hcl && sleep 3
+
+- name: Connect to the other servers
+  shell: nomad server-join 192.168.0.101 192.168.0.102 192.168.0.103

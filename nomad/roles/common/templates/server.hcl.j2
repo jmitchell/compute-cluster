@@ -1,0 +1,20 @@
+datacenter = "home"
+bind_addr = "0.0.0.0"
+advertise {
+    rpc = "{{ ansible_eth0.ipv4.address }}:4647"
+    {# serf = "{{ ansible_eth0.ipv4.address }}:4648" #}
+}
+#data_dir = "/var/run/nomad/server{{ '%02d' % local_id }}"
+data_dir = "/tmp/server"
+
+log_level = "DEBUG"
+{# enable_syslog = true #}  # TODO: set up syslog
+enable_debug = false
+# TODO: add telemetry
+
+leave_on_interrupt = true
+
+server {
+    enabled = true
+    bootstrap_expect = 3
+}
