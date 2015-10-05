@@ -1,11 +1,19 @@
 ---
-- name: Install Nomad and Docker
-  hosts: nomad-servers
-  remote_user: nomad
+- name: Install nomad
+  hosts: nomad-nodes
   sudo: yes
 
   roles:
     - common
-    - servers
-    - clients
 
+- name: Launch and coordinate nomad servers
+  hosts: nomad-servers
+  sudo: yes
+  roles:
+    - servers
+
+- name: Launch nomad clients
+  hosts: nomad-clients
+  sudo: yes
+  roles:
+    - clients

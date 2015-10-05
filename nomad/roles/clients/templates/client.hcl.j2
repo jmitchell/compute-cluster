@@ -1,4 +1,6 @@
+name = "node{{ '%02d' % local_id }}"
 datacenter = "home"
+bind_addr = "0.0.0.0"
 data_dir = "/var/run/nomad/client{{ '%02d' % local_id }}"
 
 log_level = "DEBUG"
