@@ -1,4 +1,15 @@
 ---
+- name: Add docker group
+  group:
+    name: docker
+    state: present
+
+- name: Add nomad user to docker group
+  user:
+    name: nomad
+    groups: docker
+    append: true
+
 - name: Install client.hcl
   template:
     src: client.hcl.j2
