@@ -6,3 +6,6 @@
 
   roles:
     - common
+    - servers
+    - clients
+

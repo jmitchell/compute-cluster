@@ -1,0 +1,11 @@
+---
+- name: Install client.hcl
+  template:
+    src: client.hcl.j2
+    dest: /tmp/client.hcl
+
+- name: Run nomad client
+  shell: daemon -U -o /tmp/nomad-client.log -- nomad agent -config /tmp/client.hcl && sleep 3
+
+- name: Check node-status
+  command: nomad node-status

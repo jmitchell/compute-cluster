@@ -1,0 +1,21 @@
+datacenter = "home"
+data_dir = "/var/run/nomad/client{{ '%02d' % local_id }}"
+
+log_level = "DEBUG"
+# enable_syslog = true  # TODO: set up syslog
+enable_debug = false
+
+leave_on_interrupt = true
+
+client {
+    enabled = true
+
+    # TODO: consider Consul
+    servers = ["node01:4647",
+               "node02:4647",
+               "node03:4647"]
+}
+
+ports {
+    http = 5656
+}
