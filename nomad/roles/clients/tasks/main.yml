@@ -1,4 +1,9 @@
 ---
+- name: Install docker
+  # TODO: use a more reliable/verifiable installation process
+  shell: curl -sSL https://get.docker.com/gpg | apt-key add -
+  shell: curl -sSL https://get.docker.com/ | sh
+
 - name: Add docker group
   group:
     name: docker
