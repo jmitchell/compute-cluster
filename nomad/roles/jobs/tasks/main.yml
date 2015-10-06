@@ -7,12 +7,8 @@
 - name: Dispatch job
   command: nomad run /tmp/example.nomad
 
-- name: Wait a while and then inspect job status
-  shell: sleep 15 && nomad status example
+- name: Inspect job status
+  shell: nomad status example
   register: status
 
 - debug: var=status
-
-- name: Stop job
-  command: nomad stop example
-

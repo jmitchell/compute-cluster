@@ -1,15 +1,16 @@
+name = "node{{ '%02d' % local_id }}-server"
 datacenter = "home"
 bind_addr = "0.0.0.0"
 advertise {
     rpc = "{{ ansible_eth0.ipv4.address }}:4647"
-    {# serf = "{{ ansible_eth0.ipv4.address }}:4648" #}
+    serf = "{{ ansible_eth0.ipv4.address }}:4648"
 }
 data_dir = "/var/run/nomad/server{{ '%02d' % local_id }}"
 
 log_level = "DEBUG"
-{# enable_syslog = true #}  # TODO: set up syslog
 enable_debug = false
-# TODO: add telemetry
+
+{# TODO: set up syslog and add telemetry #}
 
 leave_on_interrupt = true
 
