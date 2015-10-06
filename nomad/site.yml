@@ -2,7 +2,6 @@
 - name: Install nomad
   hosts: nomad-nodes
   sudo: yes
-
   roles:
     - common
 

@@ -10,6 +10,9 @@
     - gnupg
     - daemon
 
+# TODO: Rather than having every node download and verify nomad, do it
+# once on one machine and distribute the binary.
+
 - name: Deploy Hashicorp public key file
   copy:
     src: hashicorp.asc
@@ -18,33 +21,29 @@
 - name: Import Hashicorp key
   command: gpg --import /tmp/hashicorp.asc
 
-- name: Download SHA256 Checksums
+- name: Download SHA256 checksum file and signature file
   get_url:
-    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_SHA256SUMS
-    dest: /tmp/nomad_0.1.0_SHA256SUMS
+    url: "https://dl.bintray.com/mitchellh/nomad/nomad_{{ nomad_version }}_{{ item }}"
+    dest: "/tmp/nomad_{{ nomad_version }}_{{ item }}"
+  with_items:
+    - "SHA256SUMS"
+    - "SHA256SUMS.sig"
 
-- name: Download Signature for SHA256 Checksums
+- name: Verify signature for SHA256 checksum file
+  command: "gpg --verify /tmp/nomad_{{ nomad_version }}_SHA256SUMS.sig /tmp/nomad_{{ nomad_version }}_SHA256SUMS"
+
+- name: Download nomad
   get_url:
-    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_SHA256SUMS.sig
-    dest: /tmp/nomad_0.1.0_SHA256SUMS.sig
+    url: "https://dl.bintray.com/mitchellh/nomad/nomad_{{ nomad_version }}_linux_amd64.zip"
+    dest: "/tmp/nomad_{{ nomad_version }}_linux_amd64.zip"
 
-- name: Verify SHA256 Checksums
-  command: gpg --verify /tmp/nomad_0.1.0_SHA256SUMS.sig /tmp/nomad_0.1.0_SHA256SUMS
+- name: Verify nomad SHA256 checksum
+  shell: "grep $(sha256sum /tmp/nomad_{{ nomad_version }}_linux_amd64.zip | cut -d' ' -f1) /tmp/nomad_{{ nomad_version }}_SHA256SUMS"
 
-- name: Download Nomad
-  get_url:
-    url: https://dl.bintray.com/mitchellh/nomad/nomad_0.1.0_linux_amd64.zip
-    dest: /tmp/nomad_0.1.0_linux_amd64.zip
-
-# Temporarily disabled; see https://github.com/hashicorp/nomad/issues/168
-#
-# - name: Verify Nomad SHA256 Checksum
-#   shell: grep $(sha256sum /tmp/nomad_0.1.0_linux_amd64.zip | cut -d' ' -f1) /tmp/nomad_0.1.0_SHA256SUMS
-
-- name: Install Nomad
+- name: Install nomad
   unarchive:
     copy: false
-    src: /tmp/nomad_0.1.0_linux_amd64.zip
+    src: "/tmp/nomad_{{ nomad_version }}_linux_amd64.zip"
     dest: /usr/local/bin
 
 - file:
